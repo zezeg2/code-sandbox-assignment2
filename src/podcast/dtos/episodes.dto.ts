@@ -9,9 +9,6 @@ import {
 import { CommonOutput } from './output.dto';
 import { Episode } from '../entities/episode.entity';
 
-@ObjectType()
-export class EpisodeDto extends OmitType(Episode, ['id']) {}
-
 @InputType()
 export class CreateEpisodesInput extends PickType(Episode, [
   'title',

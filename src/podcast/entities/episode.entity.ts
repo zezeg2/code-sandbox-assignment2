@@ -3,15 +3,15 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 @InputType({ isAbstract: true })
 @ObjectType()
 export class Episode {
-  @Field((type) => Number)
+  @Field(() => Number)
   id: number;
 
-  @Field((type) => String)
+  @Field(() => String)
   title: string;
 
-  @Field((type) => String)
+  @Field(() => String)
   category: string;
 
-  @Field((type) => Number)
+  @Field(() => Number)
   rating: number;
 }

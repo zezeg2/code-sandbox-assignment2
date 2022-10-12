@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Episode } from './entities/episode.entity';
+
 import { Podcast } from './entities/podcast.entity';
 import { CreatePodcastsInput, UpdatePodcastsInput } from './dtos/podcasts.dto';
 import { CreateEpisodesInput, UpdateEpisodesInput } from './dtos/episodes.dto';
@@ -7,7 +7,8 @@ import {
   INTERNAL_EXCEPTION,
   NOT_FOUND_EPISODE,
   NOT_FOUND_PODCAST,
-} from './podcsts.error-message';
+} from './podcasts.error-message';
+import { Episode } from './entities/episode.entity';
 
 @Injectable()
 export class PodcastsService {
@@ -30,7 +31,7 @@ export class PodcastsService {
 
   createPodcast(createPodcastsInput: CreatePodcastsInput): Podcast {
     const podcast: Podcast = {
-      id: this.genPodcastId,
+      id: this.autoIncrementId('p'),
       ...createPodcastsInput,
       rating: 0,
       episodes: [],
@@ -73,7 +74,7 @@ export class PodcastsService {
     const podcast = this.getPodcast(podcastId);
     if (!podcast) throw new Error(NOT_FOUND_PODCAST);
     const episode: Episode = {
-      id: this.genPodcastId,
+      id: this.autoIncrementId('e'),
       ...createEpisodesInput,
       rating: 0,
     };
@@ -87,7 +88,7 @@ export class PodcastsService {
     }
   }
 
-  updateEpisode(
+  patchEpisode(
     podcastId: number,
     episodeId: number,
     updateEpisodesInput: UpdateEpisodesInput,
