@@ -12,24 +12,25 @@ import { CreatePodcastDto } from './dtos/create-podcast.dto';
 import { UpdateEpisodeDto } from './dtos/update-episode.dto';
 import { UpdatePodcastDto } from './dtos/update-podcast.dto';
 import { PodcastsService } from './podcasts.service';
+import { PodcastsResolver } from './podcasts.resolver';
 
 @Controller('/podcasts')
 export class PodcastsController {
-  constructor(private readonly podcastsService: PodcastsService) {}
+  constructor(private readonly podcastsResolver: PodcastsResolver) {}
 
   @Get()
   getAllPodcasts() {
-    return this.podcastsService.getAllPodcasts();
+    return this.podcastsResolver.getAllPodcasts();
   }
 
   @Post()
   createPodcast(@Body() createPodcastDto: CreatePodcastDto) {
-    return this.podcastsService.createPodcast(createPodcastDto);
+    return this.podcastsResolver.createPodcast(createPodcastDto);
   }
 
   @Get('/:id')
   getPodcast(@Param('id') id: string) {
-    return this.podcastsService.getPodcast(id);
+    return this.podcastsResolver.getPodcast(id);
   }
 
   @Patch('/:id')
@@ -37,21 +38,21 @@ export class PodcastsController {
     @Param('id') id: string,
     @Body() updatePodcastDto: UpdatePodcastDto,
   ) {
-    return this.podcastsService.updatePodcast(id, updatePodcastDto);
+    return this.podcastsResolver.patchPodcast(id, updatePodcastDto);
   }
 
   @Delete('/:id')
   deletePodcast(@Param('id') id: string) {
-    return this.podcastsService.deletePodcast(id);
+    return this.podcastsResolver.deletePodcast(id);
   }
 }
 
 @Controller('/podcasts/:id')
 export class EpisodeController {
-  constructor(private readonly podcastService: PodcastsService) {}
+  constructor(private readonly podcastsResolver: PodcastsResolver) {}
   @Get('/episodes')
   getEpisodes(@Param('id') podcastId: string) {
-    return this.podcastService.getEpisodes(podcastId);
+    return this.podcastsResolver.getEpisodes(podcastId);
   }
 
   @Post('/episodes')
@@ -59,7 +60,7 @@ export class EpisodeController {
     @Param('id') podcastId: string,
     @Body() createEpisodeDto: CreateEpisodeDto,
   ) {
-    return this.podcastService.createEpisode(podcastId, createEpisodeDto);
+    return this.podcastsResolver.createEpisode(podcastId, createEpisodeDto);
   }
 
   @Patch('/episodes/:episodeId')
@@ -68,7 +69,7 @@ export class EpisodeController {
     @Param('episodeId') episodeId: string,
     @Body() updateEpisodeDto: UpdateEpisodeDto,
   ) {
-    return this.podcastService.updateEpisode(
+    return this.podcastsResolver.patchEpisode(
       podcastId,
       episodeId,
       updateEpisodeDto,
@@ -80,6 +81,6 @@ export class EpisodeController {
     @Param('id') podcastId: string,
     @Param('episodeId') episodeId: string,
   ) {
-    return this.podcastService.deleteEpisode(podcastId, episodeId);
+    return this.podcastsResolver.deleteEpisode(podcastId, episodeId);
   }
 }
