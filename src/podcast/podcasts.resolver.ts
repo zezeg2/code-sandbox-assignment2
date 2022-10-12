@@ -5,38 +5,111 @@ import {
   CreatePodcastsInput,
   PodcastListOutput,
   PodcastOutput,
+  UpdatePodcastsInput,
 } from './dtos/podcasts.dto';
 import { CommonOutput } from './dtos/output.dto';
-import { EpisodeListOutput, EpisodeOutput } from './dtos/episodes.dto';
+import {
+  CreateEpisodesInput,
+  EpisodeListOutput,
+  EpisodeOutput,
+  UpdateEpisodesInput,
+} from './dtos/episodes.dto';
+import { NOT_FOUND_PODCAST } from './podcsts.error-message';
 
-@Resolver((type) => Podcast)
+@Resolver(() => Podcast)
 export class PodcastsResolver {
   constructor(private readonly podcastsService: PodcastsService) {}
 
   @Query(() => PodcastListOutput)
-  getAllPodcasts() {}
+  getAllPodcasts(): PodcastListOutput {
+    return { isOK: true, podcasts: this.podcastsService.getAllPodcasts() };
+  }
 
   @Query(() => PodcastOutput)
-  getPodcast(id: string) {}
+  getPodcast(@Args('id') id: number): PodcastOutput {
+    const podcast = this.podcastsService.getPodcast(id);
+    if (!podcast) return { isOK: false, error: NOT_FOUND_PODCAST };
+    return { isOK: true, podcast };
+  }
 
-  @Mutation((type) => PodcastOutput)
-  createPodcast(@Args('input') createPodcastsInput: CreatePodcastsInput) {}
+  @Mutation(() => PodcastOutput)
+  createPodcast(@Args('input') input: CreatePodcastsInput): PodcastOutput {
+    return {
+      isOK: true,
+      podcast: this.podcastsService.createPodcast(input),
+    };
+  }
 
-  @Mutation((type) => PodcastOutput)
-  patchPodcast() {}
+  @Mutation(() => PodcastOutput)
+  patchPodcast(
+    @Args('id') id: number,
+    @Args('input') input: UpdatePodcastsInput,
+  ): PodcastOutput {
+    try {
+      const podcast = this.podcastsService.patchPodcast(id, input);
+      return { isOK: true, podcast };
+    } catch (error) {
+      return { isOK: false, error: error.message };
+    }
+  }
 
-  @Mutation((type) => CommonOutput)
-  deletePodcast() {}
+  @Mutation(() => CommonOutput)
+  deletePodcast(@Args('id') id: number): CommonOutput {
+    this.podcastsService.deletePodcast(id);
+    return { isOK: true };
+  }
 
   @Query(() => EpisodeListOutput)
-  getEpisodes() {}
+  getEpisodes(@Args('id') id: number): EpisodeListOutput {
+    try {
+      const episodes = this.podcastsService.getEpisodes(id);
+      return { isOK: true, episodes };
+    } catch (error) {
+      return { isOK: false, error: error.message };
+    }
+  }
 
-  @Mutation((type) => EpisodeOutput)
-  createEpisode() {}
+  @Mutation(() => EpisodeOutput)
+  createEpisode(
+    @Args('id') id: number,
+    @Args('input') input: CreateEpisodesInput,
+  ): EpisodeOutput {
+    try {
+      const episode = this.podcastsService.createEpisode(id, input);
+      return { isOK: true, episode };
+    } catch (error) {
+      return { isOK: false, error: error.message };
+    }
+  }
 
-  @Mutation((type) => EpisodeOutput)
-  patchEpisode() {}
+  @Mutation(() => EpisodeOutput)
+  patchEpisode(
+    @Args('podcastId') podcastId: number,
+    @Args('episodeId') episodeId: number,
+    @Args('input') input: UpdateEpisodesInput,
+  ): EpisodeOutput {
+    try {
+      const episode = this.podcastsService.updateEpisode(
+        podcastId,
+        episodeId,
+        input,
+      );
+      return { isOK: true, episode };
+    } catch (error) {
+      return { isOK: false, error: error.message };
+    }
+  }
 
-  @Mutation((type) => CommonOutput)
-  deleteEpisode() {}
+  @Mutation(() => CommonOutput)
+  deleteEpisode(
+    @Args('podcastId') podcastId: number,
+    @Args('episodeId') episodeId: number,
+  ): CommonOutput {
+    try {
+      this.podcastsService.deleteEpisode(podcastId, episodeId);
+      return { isOK: true };
+    } catch (error) {
+      return { isOK: false, error: error.message };
+    }
+  }
 }

@@ -25,12 +25,12 @@ export class UpdateEpisodesInput extends PartialType(
 
 @ObjectType()
 export class EpisodeOutput extends CommonOutput {
-  @Field((type) => EpisodeDto, { nullable: true })
-  episodes?: EpisodeDto;
+  @Field(() => Episode, { nullable: true })
+  episode?: Episode;
 }
 
 @ObjectType()
 export class EpisodeListOutput extends CommonOutput {
-  @Field((type) => [EpisodeDto], { nullable: true })
-  episodes: EpisodeDto[];
+  @Field(() => [Episode], { nullable: true })
+  episodes?: Episode[];
 }

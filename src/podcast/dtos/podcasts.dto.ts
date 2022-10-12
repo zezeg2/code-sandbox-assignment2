@@ -25,12 +25,12 @@ export class UpdatePodcastsInput extends PartialType(
 
 @ObjectType()
 export class PodcastOutput extends CommonOutput {
-  @Field((type) => PodcastDto, { nullable: true })
-  podcasts?: PodcastDto | PodcastDto[];
+  @Field(() => Podcast, { nullable: true })
+  podcast?: Podcast;
 }
 
 @ObjectType()
 export class PodcastListOutput extends CommonOutput {
-  @Field((type) => [Podcast], { nullable: true })
-  podcasts?: PodcastDto | PodcastDto[];
+  @Field(() => [Podcast], { nullable: true })
+  podcasts?: PodcastDto[];
 }
