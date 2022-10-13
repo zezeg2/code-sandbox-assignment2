@@ -1,7 +1,7 @@
 import { Episode } from './episode.entity';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 
-@InputType({ isAbstract: true })
+@InputType('PodcastInputType', { isAbstract: true })
 @ObjectType()
 export class Podcast {
   @Field(() => Number)

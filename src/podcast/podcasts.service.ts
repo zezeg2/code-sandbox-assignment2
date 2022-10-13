@@ -94,16 +94,15 @@ export class PodcastsService {
     updateEpisodesInput: UpdateEpisodesInput,
   ): Episode {
     try {
-      const episode = this.findEpisode(podcastId, episodeId);
-      if (!episode) {
+      if (!this.findEpisode(podcastId, episodeId)) {
         throw new Error(NOT_FOUND_EPISODE);
       }
       const podcast = this.getPodcast(podcastId);
-      this.patchPodcast(podcastId, {
-        ...podcast,
-        episodes: [...podcast.episodes, { ...episode, ...updateEpisodesInput }],
-      });
-      return episode;
+      const updated = podcast.episodes.find((o) => o.id === episodeId);
+      for (const key in { ...updateEpisodesInput }) {
+        updated[key] = updateEpisodesInput[key];
+      }
+      return updated;
     } catch (error) {
       throw error;
     }

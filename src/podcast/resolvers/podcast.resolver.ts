@@ -34,14 +34,10 @@ export class PodcastsResolver {
     };
   }
 
-  /**
-   * Below patchPodcast method make issue...
-   */
-
   @Mutation(() => PodcastOutput)
   patchPodcast(
     @Args('id') id: number,
-    @Args('input') input: UpdatePodcastsInput, // this inputType defined in root_dir/src/podcast/dtos/podcast.dto.ts UpdatePodcastInput
+    @Args('input') input: UpdatePodcastsInput,
   ): PodcastOutput {
     try {
       const podcast = this.podcastsService.patchPodcast(id, input);
